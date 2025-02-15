@@ -9,6 +9,8 @@ class Watchlist extends Model
 {
     use HasFactory;
 
+    protected $table = 'watchlist';
+
     protected $fillable = [
         'title',
         'storyline',

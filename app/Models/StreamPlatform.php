@@ -15,7 +15,7 @@ class StreamPlatform extends Model
         'website'
     ];
 
-    public function watchlists()
+    public function watchlist()
     {
         return $this->hasMany(Watchlist::class, 'platform_id');
     }
