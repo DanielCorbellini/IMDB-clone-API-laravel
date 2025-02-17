@@ -7,5 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/watchlist/api', [WatchListController::class, 'index']);
 Route::get('/watchlist/view', [WatchListController::class, 'showView']);

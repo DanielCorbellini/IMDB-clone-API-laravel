@@ -7,14 +7,19 @@ use App\Models\Watchlist;
 
 class WatchlistService
 {
-    public function getMoviesFromAPI()
+    public function getWatchlistFromAPI()
     {
         $response = Http::get('http://127.0.0.1:8001/watchlist/api');
         return $response->successful() ? json_decode($response->body(), true) : [];
     }
 
-    public function getMoviesFromDatabase()
+    public function getWatchlistFromDatabase()
     {
         return Watchlist::all();
+    }
+
+    public function createWatchList($data)
+    {
+        return Watchlist::create($data);
     }
 }

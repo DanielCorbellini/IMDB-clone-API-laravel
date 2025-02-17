@@ -19,14 +19,30 @@ class WatchListController extends Controller
 
     public function index()
     {
-        $movies = Watchlist::all();
+        $movies = $this->watchlistService->getWatchlistFromDatabase();
         return response()->json($movies);
     }
 
     public function showView()
     {
-        $movies = $this->watchlistService->getMoviesFromAPI();
-
+        $movies = $this->watchlistService->getWatchlistFromAPI();
         return view('watchlist.index', compact('movies'));
+    }
+
+    public function store(Request $request)
+    {
+        // TODO
+        //$validatedData = $request->validate([]);
+
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:50',
+            'storyline' => 'required|string|max:200',
+            'platform_id' => 'required|integer',
+            'released' => 'boolean',
+        ]);
+
+        $watchlist = $this->watchlistService->createWatchList($validatedData);
+
+        return response()->json($watchlist, 201);
     }
 }
