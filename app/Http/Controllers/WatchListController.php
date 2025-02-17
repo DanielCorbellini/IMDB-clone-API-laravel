@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Watchlist;
+use App\Services\WatchlistService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
 class WatchListController extends Controller
 {
+    protected $watchlistService;
+
+    public function __construct(WatchlistService $watchlistService)
+    {
+        $this->watchlistService = $watchlistService;
+    }
+
     public function index()
     {
         $movies = Watchlist::all();
@@ -17,12 +25,7 @@ class WatchListController extends Controller
 
     public function showView()
     {
-        $response = Http::get('http://127.0.0.1:8000/watchlist/api');
-
-        $movies = [];
-        if ($response->successful()) {
-            $movies = $response->json();
-        }
+        $movies = $this->watchlistService->getMoviesFromAPI();
 
         return view('watchlist.index', compact('movies'));
     }
