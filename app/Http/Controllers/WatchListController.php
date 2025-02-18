@@ -31,9 +31,6 @@ class WatchListController extends Controller
 
     public function store(Request $request)
     {
-        // TODO
-        //$validatedData = $request->validate([]);
-
         $validatedData = $request->validate([
             'title' => 'required|string|max:50',
             'storyline' => 'required|string|max:200',
@@ -41,8 +38,36 @@ class WatchListController extends Controller
             'released' => 'boolean',
         ]);
 
-        $watchlist = $this->watchlistService->createWatchList($validatedData);
+        try {
+            $watchlist = $this->watchlistService->createWatchList($validatedData);
+            return response()->json($watchlist, 201);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'error' => 'Falha ao salvar no banco. Verifique os dados enviados',
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 
-        return response()->json($watchlist, 201);
+    public function show($id)
+    {
+        $movie = $this->watchlistService->getSpecificWatchlist($id);
+
+        if (!$movie) {
+            return response()->json(['message' => 'Item não encontrado'], 404);
+        }
+
+        return response()->json($movie);
+    }
+
+    public function destroy($id)
+    {
+        $movie = $this->watchlistService->deleteWatchList($id);
+
+        if ($movie) {
+            return response()->json(['message' => 'Item deletado com sucesso.'], 200);
+        }
+
+        return response()->json(['message' => 'Item não encontrado'], 404);
     }
 }

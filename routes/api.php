@@ -11,4 +11,6 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/watchlist/list', [WatchListController::class, 'index']);
+Route::get('/watchlist/list/{id}', [WatchListController::class, 'show']);
 Route::post('/watchlist/create', [WatchListController::class, 'store']);
+Route::delete('/watchlist/delete/{id}', [WatchListController::class, 'destroy']);
