@@ -40,12 +40,9 @@ class WatchListController extends Controller
 
         try {
             $watchlist = $this->watchlistService->createWatchList($validatedData);
-            return response()->json($watchlist, 201);
+            return response()->json(['message' => 'Filme adicionado à watchlist!', 'data' => $watchlist], 201);
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                'error' => 'Falha ao salvar no banco. Verifique os dados enviados',
-                'message' => $e->getMessage(),
-            ]);
+            return response()->json(['error' => 'Falha ao salvar no banco.'], 500);
         }
     }
 
