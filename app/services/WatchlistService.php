@@ -33,9 +33,9 @@ class WatchlistService
         $watchlist = $this->getSpecificWatchlist($id);
 
         if (!$watchlist) {
-            // Se o item não for encontrado, retorna false ou outra resposta
             return false;
         }
+
         Watchlist::destroy($id);
 
         return true;

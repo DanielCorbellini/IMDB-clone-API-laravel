@@ -9,6 +9,8 @@ class StreamPlatform extends Model
 {
     use HasFactory;
 
+    protected $table = 'stream_platform';
+
     protected $fillable = [
         'name',
         'about',

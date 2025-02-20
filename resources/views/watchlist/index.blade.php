@@ -17,19 +17,19 @@
     <form id="watchlist-form">
         @csrf
         <div class="form-group">
-            <label for="formGroupExampleInput">Title</label>
+            <label for="title">Title</label>
             <input type="text" class="form-control" name="title" id="title" required>
         </div>
         <div class="form-group">
-            <label for="formGroupExampleInput">Storyline</label>
+            <label for="storyline">Storyline</label>
             <input type="text" class="form-control" name="storyline" id="storyline" required>
         </div>
         <div class="form-group">
-            <label for="formGroupExampleInput">Platform</label>
+            <label for="platform_id">Platform</label>
             <input type="number" class="form-control" name="platform_id" id="platform_id" required>
         </div>
         <div class="form-group">
-            <label for="exampleFormControlSelect2">Realsead</label>
+            <label for="released">Released</label>
             <select class="form-control" name="released" id="released" required>
                 <option value="true">Yes</option>
                 <option value="false">No</option>
@@ -50,7 +50,7 @@
         <tbody>
             @if (!empty($movies))
                 @foreach ($movies as $movie)
-                    <tr scope="row">
+                    <tr scope="row" id="{{ $movie['id'] }}">
                         <td> {{ $movie['title'] }} </td>
                         <td> {{ $movie['storyline'] }} </td>
                         <td> {{ $movie['platform_id'] }} </td>
@@ -104,14 +104,15 @@
 
                     // ✅ Adiciona o novo filme à tabela dinamicamente
                     const newRow = document.createElement('tr');
+                    newRow.id = `${data.id}`; // Correção aqui
                     newRow.innerHTML = `
                     <td>${title}</td>
                     <td>${storyline}</td>
                     <td>${platform_id}</td>
                     <td>${released}</td>
-                `;
-
-                    document.querySelector("tbody").appendChild(newRow); // Insere na tabela
+                    <td> <button type="submit" class="btn btn-danger delete-movie"
+                                data-id="${data.id}">Remover</button> </td>`;
+                    document.querySelector("tbody").appendChild(newRow);
                 }
             })
             .catch(error => {
@@ -119,39 +120,35 @@
             });
     });
 
-    // remover
-    document.addEventListener("DOMContentLoaded", function() {
-        // Seleciona todos os botões de remover
-        document.querySelectorAll(".delete-movie").forEach(button => {
-            button.addEventListener("click", function() {
-                const movieId = this.getAttribute("data-id");
+    // Seleciona todos os botões de remover
+    document.querySelector("tbody").addEventListener("click", function(event) {
+        if (event.target.classList.contains("delete-movie")) {
+            const movieId = event.target.getAttribute("data-id");
 
-                if (!confirm("Tem certeza que deseja remover este filme?")) return;
-
-                fetch(`http://127.0.0.1:8000/api/watchlist/delete/${movieId}`, {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector(
-                                'meta[name="csrf-token"]').content
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            this.closest("tr").remove(); // Remove a linha da tabela
-                        } else {
-                            alert(data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Erro ao remover filme:", error);
-                    });
-            });
-        });
+            fetch(`http://127.0.0.1:8000/api/watchlist/delete/${movieId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erro ao deletar o filme");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const movieElement = document.getElementById(movieId);
+                    if (movieElement) {
+                        movieElement.remove();
+                    } else {
+                        console.warn(`Elemento com ID ${movieId} não encontrado.`);
+                    }
+                })
+                .catch(error => console.error("Erro:", error));
+        }
     });
 </script>
-
-
 
 </html>
