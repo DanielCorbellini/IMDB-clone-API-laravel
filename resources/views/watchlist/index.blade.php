@@ -26,7 +26,12 @@
         </div>
         <div class="form-group">
             <label for="platform_id">Platform</label>
-            <input type="number" class="form-control" name="platform_id" id="platform_id" required>
+            <select class="form-control" name="platform_id" id="platform_id" required>
+                <option value="" disabled>Select a platform</option>
+                @foreach ($streamPlatforms as $streamPlatform)
+                    <option value="{{ $streamPlatform['id'] }}">{{ $streamPlatform['name'] }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="form-group">
             <label for="released">Released</label>
@@ -53,7 +58,7 @@
                     <tr scope="row" id="{{ $movie['id'] }}">
                         <td> {{ $movie['title'] }} </td>
                         <td> {{ $movie['storyline'] }} </td>
-                        <td> {{ $movie['platform_id'] }} </td>
+                        <td> {{ $movie->platform->name ?? 'Desconhecido' }} </td>
                         <td> {{ $movie['released'] ? 'Yes' : 'No' }} </td>
                         <td> <button type="submit" class="btn btn-danger delete-movie"
                                 data-id="{{ $movie['id'] }}">Remover</button> </td>

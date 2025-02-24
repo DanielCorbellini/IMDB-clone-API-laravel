@@ -24,6 +24,6 @@ class Watchlist extends Model
 
     public function platform()
     {
-        return $this->belongsTo(StreamPlatform::class, 'platform_id');
+        return $this->belongsTo(StreamPlatform::class, 'platform_id', 'id');
     }
 }

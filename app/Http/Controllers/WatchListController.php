@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\StreamPlatform;
 use App\Models\Watchlist;
+use App\services\StreamPlatformService;
 use App\Services\WatchlistService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -11,10 +13,12 @@ use Illuminate\Http\Request;
 class WatchListController extends Controller
 {
     protected $watchlistService;
+    protected $streamPlatformService;
 
-    public function __construct(WatchlistService $watchlistService)
+    public function __construct(WatchlistService $watchlistService, StreamPlatformService $streamPlatformService)
     {
         $this->watchlistService = $watchlistService;
+        $this->streamPlatformService = $streamPlatformService;
     }
 
     public function index()
@@ -25,8 +29,13 @@ class WatchListController extends Controller
 
     public function showView()
     {
-        $movies = $this->watchlistService->getWatchlistFromAPI();
-        return view('watchlist.index', compact('movies'));
+        // $movies = $this->watchlistService->getWatchlistFromAPI();
+        $streamPlatforms = $this->streamPlatformService->getStreamPlatformFromAPI();
+
+        // return view('watchlist.index', compact('movies', 'streamPlatforms'));
+
+        $movies = Watchlist::with('platform')->get();
+        return view('watchlist.index', compact('movies', 'streamPlatforms'));
     }
 
     public function store(Request $request)
