@@ -13,9 +13,11 @@ Route::get('/user', function (Request $request) {
 Route::get('/watchlist/list', [WatchListController::class, 'index']);
 Route::get('/watchlist/list/{id}', [WatchListController::class, 'show']);
 Route::post('/watchlist/create', [WatchListController::class, 'store']);
+Route::put('/watchlist/update/{watchlist}', [WatchListController::class, 'update']);
 Route::delete('/watchlist/delete/{id}', [WatchListController::class, 'destroy']);
 
 Route::get('/stream/list', [StreamPlatformController::class, 'index']);
 Route::get('/stream/list/{id}', [StreamPlatformController::class, 'show']);
 Route::post('/stream/create', [StreamPlatformController::class, 'store']);
-Route::delete('/stream/delete/{id}', [StreamPlatformController::class, 'delete']);
+Route::put('/stream/update/{streamPlatform}', [StreamPlatformController::class, 'update']);
+Route::delete('/stream/delete/{id}', [StreamPlatformController::class, 'destroy']);

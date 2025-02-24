@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\StreamPlatform;
 use App\services\StreamPlatformService;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class StreamPlatformController extends Controller
@@ -36,7 +38,18 @@ class StreamPlatformController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:150',
+            'about' => 'required|string|max:150',
+            'website' => 'required|string|max:100'
+        ]);
+
+        try {
+            $platform = $this->streamPlatformService->createStreamPlatform($validatedData);
+            return response()->json($platform, 201);
+        } catch (QueryException $e) {
+            return response()->json(['error' => 'Falha ao salvar no banco de dados.'], 500);
+        }
     }
 
     /**
@@ -62,9 +75,20 @@ class StreamPlatformController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, StreamPlatform $streamPlatform)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:150',
+            'about' => 'required|string|max:150',
+            'website' => 'required|string|max:100'
+        ]);
+
+        $updatedPlatform = $this->streamPlatformService->updateStreamPlatform($streamPlatform, $validatedData);
+
+        return response()->json([
+            "message" => 'Stream platform updated!',
+            'streamPlatform' => $updatedPlatform
+        ], 200);
     }
 
     /**

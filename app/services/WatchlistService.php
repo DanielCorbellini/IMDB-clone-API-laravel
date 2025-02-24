@@ -40,4 +40,10 @@ class WatchlistService
 
         return true;
     }
+
+    public function updateWatchList(Watchlist $watchlist, array $data)
+    {
+        $watchlist->update($data);
+        return $watchlist;
+    }
 }
