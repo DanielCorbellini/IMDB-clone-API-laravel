@@ -39,4 +39,10 @@ class StreamPlatformService
 
         return true;
     }
+
+    public function updateStreamPlatform(StreamPlatform $streamPlatform, array $data)
+    {
+        $streamPlatform->update($data);
+        return $streamPlatform;
+    }
 }

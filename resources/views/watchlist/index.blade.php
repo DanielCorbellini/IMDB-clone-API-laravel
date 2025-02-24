@@ -45,6 +45,7 @@
     <table class="table table-hover">
         <thead>
             <tr>
+                <th scope="col">Code</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
                 <th scope="col">Platform</th>
@@ -56,6 +57,7 @@
             @if (!empty($movies))
                 @foreach ($movies as $movie)
                     <tr scope="row" id="{{ $movie['id'] }}">
+                        <td> {{ $movie['id'] }} </td>
                         <td> {{ $movie['title'] }} </td>
                         <td> {{ $movie['storyline'] }} </td>
                         <td> {{ $movie->platform->name ?? 'Desconhecido' }} </td>

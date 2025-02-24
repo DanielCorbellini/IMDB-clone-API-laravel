@@ -76,4 +76,21 @@ class WatchListController extends Controller
 
         return response()->json(['message' => 'Item não encontrado'], 404);
     }
+
+    public function update(Request $request, Watchlist $watchlist)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:50',
+            'storyline' => 'required|string|max:200',
+            'platform_id' => 'required|integer',
+            'released' => 'boolean',
+        ]);
+
+        $updatedMovie = $this->watchlistService->updateWatchList($watchlist, $validatedData);
+
+        return response()->json([
+            'message' => 'Watchlist updated!',
+            'watchlist' => $updatedMovie
+        ], 200);
+    }
 }
